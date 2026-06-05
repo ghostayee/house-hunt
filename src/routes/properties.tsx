@@ -1,4 +1,9 @@
-import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  useLocation,
+} from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod";
@@ -40,19 +45,13 @@ function PropertiesPage() {
   const location = useLocation();
   const [extraAmenities, setExtraAmenities] = useState<string[]>([]);
 
-  // Check if we're viewing a property detail ($id route)
-  const isDetailRoute = location.pathname.includes("/properties/") &&
-    location.pathname !== "/properties";
-
-  if (isDetailRoute) {
-    return <Outlet />;
-  }
-
-  const subcounties = useMemo(
+  // Calculate subcounties for filtering
+  const availableSubcounties = useMemo(
     () => getSubcounties(search.county),
     [search.county],
   );
 
+  // Filter properties based on search criteria
   const filtered = useMemo(() => {
     return PROPERTIES.filter((p) => {
       if (search.county && p.county !== search.county) return false;
@@ -69,6 +68,15 @@ function PropertiesPage() {
       return true;
     });
   }, [search, extraAmenities]);
+
+  // Check if we're viewing a property detail ($id route)
+  const isDetailRoute =
+    location.pathname.includes("/properties/") &&
+    location.pathname !== "/properties";
+
+  if (isDetailRoute) {
+    return <Outlet />;
+  }
 
   function update<K extends keyof typeof search>(
     key: K,
