@@ -1,0 +1,42 @@
+export const CATEGORIES = [
+  "Single Room",
+  "Bedsitter",
+  "Studio Apartment",
+  "One Bedroom",
+  "Two Bedroom",
+  "Three Bedroom",
+  "Four Bedroom",
+  "Mansion",
+  "Apartment",
+  "Maisonette",
+  "Airbnb",
+  "Student Hostel",
+  "Commercial Shop",
+  "Office Space",
+  "Warehouse",
+  "Event Venue",
+  "Club",
+  "Lounge",
+  "Restaurant Space",
+  "Land for Lease",
+  "Holiday Home",
+] as const;
+
+export type PropertyCategory = (typeof CATEGORIES)[number];
+
+export const AMENITIES = [
+  "Furnished",
+  "Parking",
+  "Water",
+  "Security",
+  "Pets Allowed",
+  "WiFi",
+  "Backup Power",
+  "Lift",
+  "Gym",
+  "Swimming Pool",
+  "Balcony",
+  "Borehole",
+  "CCTV",
+  "Garbage Collection",
+] as const;
