@@ -5,7 +5,6 @@ import {
   useLocation,
 } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { fallback, zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod";
 import { Filter, MapPin, SearchX } from "lucide-react";
 import { Header } from "@/components/Header";
@@ -16,16 +15,26 @@ import { COUNTY_NAMES, getSubcounties } from "@/data/counties";
 import { CATEGORIES, AMENITIES } from "@/data/categories";
 
 const searchSchema = z.object({
-  county: fallback(z.string(), "").default(""),
-  subcounty: fallback(z.string(), "").default(""),
-  category: fallback(z.string(), "").default(""),
-  min: fallback(z.number(), 0).default(0),
-  max: fallback(z.number(), 0).default(0),
-  verified: fallback(z.boolean(), false).default(false),
+  county: z.string().default(""),
+  subcounty: z.string().default(""),
+  category: z.string().default(""),
+  min: z.preprocess((value) => {
+    if (value === "" || value === undefined || value === null) return 0;
+    return Number(value);
+  }, z.number().default(0)),
+  max: z.preprocess((value) => {
+    if (value === "" || value === undefined || value === null) return 0;
+    return Number(value);
+  }, z.number().default(0)),
+  verified: z.preprocess((value) => {
+    if (value === "" || value === undefined || value === null) return false;
+    if (typeof value === "string") return value.toLowerCase() === "true";
+    return Boolean(value);
+  }, z.boolean().default(false)),
 });
 
 export const Route = createFileRoute("/properties")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: searchSchema,
   head: () => ({
     meta: [
       { title: "Browse properties — HouseLink Kenya" },
